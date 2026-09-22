@@ -47,6 +47,70 @@ const onScroll = () => {
 onScroll();
 window.addEventListener("scroll", onScroll, { passive: true });
 
+const credentialBar = document.querySelector("[data-credential-bar]");
+if (credentialBar) {
+  const counters = credentialBar.querySelectorAll("[data-count]");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let revealed = false;
+
+  const runCounters = () => {
+    counters.forEach((node) => {
+      const target = Number(node.getAttribute("data-count") || "0");
+      if (!target) return;
+      if (reducedMotion) {
+        node.textContent = String(target);
+        return;
+      }
+      const duration = 1400;
+      const start = performance.now();
+      const tick = (now) => {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - (1 - progress) ** 4;
+        node.textContent = String(Math.round(target * eased));
+        if (progress < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  };
+
+  const reveal = () => {
+    if (revealed) return;
+    revealed = true;
+    credentialBar.classList.add("is-visible");
+    runCounters();
+  };
+
+  const inViewport = () => {
+    const rect = credentialBar.getBoundingClientRect();
+    const viewHeight = window.innerHeight || document.documentElement.clientHeight;
+    return rect.top < viewHeight * 0.92 && rect.bottom > viewHeight * 0.08;
+  };
+
+  if (reducedMotion) {
+    reveal();
+  } else {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          reveal();
+          observer.disconnect();
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+    );
+    observer.observe(credentialBar);
+
+    const checkNow = () => {
+      if (inViewport()) reveal();
+    };
+
+    checkNow();
+    window.addEventListener("load", checkNow);
+    window.addEventListener("scroll", checkNow, { passive: true });
+  }
+}
+
 const form = document.querySelector("[data-contact-form]");
 form?.addEventListener("submit", (event) => {
   event.preventDefault();
