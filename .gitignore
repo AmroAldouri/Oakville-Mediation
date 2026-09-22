@@ -1,0 +1,7 @@
+.vercel/
+node_modules/
+decode-shot.js
+server.js
+assets/preview-hero.jpg
+*.code-workspace
+.DS_Store
