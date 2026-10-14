@@ -1,0 +1,9 @@
+{
+  "name": "oakville-mediation",
+  "private": true,
+  "description": "Cross Mediation Inc static site",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  }
+}
