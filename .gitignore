@@ -5,3 +5,4 @@ server.js
 assets/preview-hero.jpg
 *.code-workspace
 .DS_Store
+.env*

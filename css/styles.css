@@ -828,6 +828,14 @@ address {
   color: var(--muted);
 }
 
+.practice-intro {
+  max-width: 42rem;
+}
+
+.practice-intro h2 {
+  max-width: 20ch;
+}
+
 .practice-quote {
   margin-top: 3rem;
   padding-top: 2rem;
